@@ -65,7 +65,6 @@ function App() {
      )
    : setFilteredTasks(tasks)
  }
-
  const handleFilterByTitle = () => {
   const value = filterByTitleRef.current.value
   value
@@ -211,14 +210,16 @@ function App() {
         }}
        >
         {openFilterByTitle ? (
-         <div className="absolute left-1 top-5 bg-blue-50 border border-blue-100 shadow-sm">
+         <div className="absolute right-1 top-5 bg-blue-50 border border-blue-100 shadow-sm p-2 space-y-2 flex flex-col">
           <input
            ref={filterByTitleRef}
            type="text"
            placeholder="Search by title"
            className="p-1"
           />
-          <button onClick={handleFilterByTitle}>Filter</button>
+          <div className="flex justify-between">
+           <button onClick={handleFilterByTitle}>Filter</button>
+          </div>
          </div>
         ) : null}
         Title
@@ -234,7 +235,7 @@ function App() {
         }}
        >
         {openFilterByDescription ? (
-         <div className="absolute left-1 top-5 bg-blue-50 border border-blue-100 shadow-sm">
+         <div className="absolute right-1 top-5 bg-blue-50 border border-blue-100 shadow-sm p-2 space-y-2 flex flex-col">
           <input
            ref={filterByDescriptionRef}
            type="text"
@@ -257,7 +258,7 @@ function App() {
         }}
        >
         {openFilterByDate ? (
-         <div className="absolute left-1 top-5 bg-blue-50 border border-blue-100 shadow-sm">
+         <div className="absolute right-1 top-5 bg-blue-50 border border-blue-100 shadow-sm p-2 space-y-2 flex flex-col">
           <input
            ref={filterByDateRef}
            type="text"
@@ -280,14 +281,19 @@ function App() {
         }}
        >
         {openFilterByPriority ? (
-         <div className="absolute left-1 top-5 bg-blue-50 border border-blue-100 shadow-sm">
-          <input
+         <div className="absolute right-1 top-5 bg-blue-50 border border-blue-100 shadow-sm p-2 space-y-2 flex flex-col">
+          <select
            ref={filterByPriorityRef}
-           type="text"
-           placeholder="Search by priority"
+           defaultValue=""
+           placeholder="Select priority"
            className="p-1"
-          />
-          <button onClick={handleFilterByPriority}>Filter</button>
+           onChange={handleFilterByPriority}
+          >
+           <option>Select</option>
+           <option value="low">low</option>
+           <option value="medium">medium</option>
+           <option value="high">high</option>
+          </select>
          </div>
         ) : null}
         Priority
@@ -303,14 +309,20 @@ function App() {
         }}
        >
         {openFilterByStatus ? (
-         <div className="absolute left-1 top-5 bg-blue-50 border border-blue-100 shadow-sm">
-          <input
+         <div className="absolute right-1 top-5 bg-blue-50 border border-blue-100 shadow-sm p-2 space-y-2 flex flex-col">
+          <select
            ref={filterByStatusRef}
-           type="text"
-           placeholder="Search by status"
+           defaultValue=""
+           placeholder="Select status"
            className="p-1"
-          />
-          <button onClick={handleFilterByStatus}>Filter</button>
+           onChange={handleFilterByStatus}
+          >
+           <option>Select</option>
+           <option value="Not started">Not started</option>
+           <option value="In progress">In progress</option>
+           <option value="Testing">Testing</option>
+           <option value="Done">Done</option>
+          </select>
          </div>
         ) : null}
         Status
