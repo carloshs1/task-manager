@@ -10,6 +10,8 @@ function App() {
  const filterByDescriptionRef = useRef()
  const [openFilterByDate, setOpenFilterByDate] = useState(false)
  const filterByDateRef = useRef()
+ const [openFilterByPriority, setOpenFilterByPriority] = useState(false)
+ const filterByPriorityRef = useRef()
  const [tasks, setTasks] = useState([])
  const [filteredTasks, setFilteredTasks] = useState([])
  const {
@@ -41,6 +43,7 @@ function App() {
   setOpenFilterByTitle(false)
   setOpenFilterByDescription(false)
   setOpenFilterByDate(false)
+  setOpenFilterByPriority(false)
  }, [filteredTasks])
 
  const handleGlobalFilter = (e) => {
@@ -88,6 +91,26 @@ function App() {
      )
    : setFilteredTasks(tasks)
  }
+ const handleFilterByPriority = () => {
+  const value = filterByPriorityRef.current.value
+  value
+   ? setFilteredTasks(
+      tasks.filter((task) =>
+       task.priority.toLowerCase().includes(value.toLowerCase())
+      )
+     )
+   : setFilteredTasks(tasks)
+ }
+ //  const handleFilterByDate = () => {
+ //   const value = filterByDateRef.current.value
+ //   value
+ //    ? setFilteredTasks(
+ //       tasks.filter((task) =>
+ //        task.date.toLowerCase().includes(value.toLowerCase())
+ //       )
+ //      )
+ //    : setFilteredTasks(tasks)
+ //  }
 
  return (
   <div className="App relative min-h-screen bg-gray-200">
@@ -156,7 +179,16 @@ function App() {
       placeholder="Search"
       onChange={handleGlobalFilter}
      />
-     <button onClick={() => setFilteredTasks(tasks)}>Reset Filters</button>
+     <button
+      onClick={() => {
+       setOpenFilterByTitle(false)
+       setOpenFilterByDescription(false)
+       setOpenFilterByDate(false)
+       setOpenFilterByPriority(false)
+      }}
+     >
+      Reset Filters
+     </button>
     </div>
     <table>
      <thead className="bg-white">
@@ -167,6 +199,7 @@ function App() {
          setOpenFilterByTitle(true)
          setOpenFilterByDescription(false)
          setOpenFilterByDate(false)
+         setOpenFilterByPriority(false)
         }}
        >
         {openFilterByTitle ? (
@@ -188,6 +221,7 @@ function App() {
          setOpenFilterByTitle(false)
          setOpenFilterByDescription(true)
          setOpenFilterByDate(false)
+         setOpenFilterByPriority(false)
         }}
        >
         {openFilterByDescription ? (
@@ -209,6 +243,7 @@ function App() {
          setOpenFilterByTitle(false)
          setOpenFilterByDescription(false)
          setOpenFilterByDate(true)
+         setOpenFilterByPriority(false)
         }}
        >
         {openFilterByDate ? (
@@ -224,7 +259,28 @@ function App() {
         ) : null}
         Date
        </th>
-       <th>Priority</th>
+       <th
+        className="relative"
+        onClick={() => {
+         setOpenFilterByTitle(false)
+         setOpenFilterByDescription(false)
+         setOpenFilterByDate(false)
+         setOpenFilterByPriority(true)
+        }}
+       >
+        {openFilterByPriority ? (
+         <div className="absolute left-1 top-5 bg-blue-50 border border-blue-100 shadow-sm">
+          <input
+           ref={filterByPriorityRef}
+           type="text"
+           placeholder="Search by priority"
+           className="p-1"
+          />
+          <button onClick={handleFilterByPriority}>Filter</button>
+         </div>
+        ) : null}
+        Priority
+       </th>
        <th>Status</th>
       </tr>
      </thead>
