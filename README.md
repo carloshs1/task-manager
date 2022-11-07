@@ -2,6 +2,12 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Want to run it?
+
+- Go to [this repo](https://github.com/carloshs1/task-manager), click the green button `code` and clone this repo
+- Open VSCode in a empty folder and paste  `git clone git@github.com:carloshs1/task-manager.git` in the terminal
+- run `npm start` and go to open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
 ## Available Scripts
 
 In the project directory, you can run:
