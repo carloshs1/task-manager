@@ -163,7 +163,7 @@ function App() {
    </div>
    <div className="flex flex-col max-w-6xl mx-auto space-y-5 p-1">
     <div className="space-x-2">
-     <span>{`Hello {name} you have ${
+     <span>{`Hello! you have ${
       tasks.filter((task) => task.status === 'Done').length
      } task completed by today and ${
       tasks.filter((task) => task.status !== 'Done').length
@@ -380,22 +380,33 @@ function App() {
         return null
        }
       })}
+      {!filteredTasks.length && (
+       <tr>
+        <td></td>
+        <td></td>
+        <td>Add a task!</td>
+        <td></td>
+        <td></td>
+       </tr>
+      )}
      </tbody>
     </table>
-    <div className="space-x-3 flex">
-     <p>Page:</p>
-     {[...Array(Math.ceil(filteredTasks?.length / 5)).keys()].map(
-      (value, i) => (
-       <button
-        className={`${value === item / 5 && 'text-red-700 decoration-8'}`}
-        key={`button ${i}`}
-        onClick={() => setItem(value * 5)}
-       >
-        {value + 1}
-       </button>
-      )
-     )}
-    </div>
+    {!!filteredTasks.length && (
+     <div className="space-x-3 flex">
+      <p>Page:</p>
+      {[...Array(Math.ceil(filteredTasks?.length / 5)).keys()].map(
+       (value, i) => (
+        <button
+         className={`${value === item / 5 && 'text-red-700 decoration-8'}`}
+         key={`button ${i}`}
+         onClick={() => setItem(value * 5)}
+        >
+         {value + 1}
+        </button>
+       )
+      )}
+     </div>
+    )}
    </div>
   </div>
  )
