@@ -12,8 +12,11 @@ function App() {
  const filterByDateRef = useRef()
  const [openFilterByPriority, setOpenFilterByPriority] = useState(false)
  const filterByPriorityRef = useRef()
+ const [openFilterByStatus, setOpenFilterByStatus] = useState(false)
+ const filterByStatusRef = useRef()
  const [tasks, setTasks] = useState([])
  const [filteredTasks, setFilteredTasks] = useState([])
+ const [item, setItem] = useState(0)
  const {
   register,
   handleSubmit,
@@ -28,6 +31,7 @@ function App() {
   setValue('priority', 'high')
   setValue('status', 'Not started')
   setTasks((prevTasks) => [...prevTasks, data])
+  setFilteredTasks((prevTasks) => [...prevTasks, data])
   localStorage.setItem('tasks', JSON.stringify([...tasks, data]))
  }
 
@@ -44,6 +48,7 @@ function App() {
   setOpenFilterByDescription(false)
   setOpenFilterByDate(false)
   setOpenFilterByPriority(false)
+  setOpenFilterByStatus(false)
  }, [filteredTasks])
 
  const handleGlobalFilter = (e) => {
@@ -101,21 +106,21 @@ function App() {
      )
    : setFilteredTasks(tasks)
  }
- //  const handleFilterByDate = () => {
- //   const value = filterByDateRef.current.value
- //   value
- //    ? setFilteredTasks(
- //       tasks.filter((task) =>
- //        task.date.toLowerCase().includes(value.toLowerCase())
- //       )
- //      )
- //    : setFilteredTasks(tasks)
- //  }
+ const handleFilterByStatus = () => {
+  const value = filterByStatusRef.current.value
+  value
+   ? setFilteredTasks(
+      tasks.filter((task) =>
+       task.status.toLowerCase().includes(value.toLowerCase())
+      )
+     )
+   : setFilteredTasks(tasks)
+ }
 
  return (
   <div className="App relative min-h-screen bg-gray-200">
    <div
-    className={`h-screen w-screen bg-gray-300 absolute top-0 flex justify-center items-center ${
+    className={`h-screen w-screen bg-gray-300 absolute top-0 flex justify-center items-center z-50 ${
      openModal ? '' : 'hidden'
     }`}
    >
@@ -166,7 +171,7 @@ function App() {
      } pending tasks.`}</span>
      <button
       type="button"
-      className="bg-red-100 rounded-full p-2"
+      className="bg-white border border-gray-500 rounded-full p-2"
       onClick={() => setOpenModal(true)}
      >
       Add task
@@ -185,6 +190,8 @@ function App() {
        setOpenFilterByDescription(false)
        setOpenFilterByDate(false)
        setOpenFilterByPriority(false)
+       setOpenFilterByStatus(false)
+       setFilteredTasks(tasks)
       }}
      >
       Reset Filters
@@ -200,6 +207,7 @@ function App() {
          setOpenFilterByDescription(false)
          setOpenFilterByDate(false)
          setOpenFilterByPriority(false)
+         setOpenFilterByStatus(false)
         }}
        >
         {openFilterByTitle ? (
@@ -222,6 +230,7 @@ function App() {
          setOpenFilterByDescription(true)
          setOpenFilterByDate(false)
          setOpenFilterByPriority(false)
+         setOpenFilterByStatus(false)
         }}
        >
         {openFilterByDescription ? (
@@ -244,6 +253,7 @@ function App() {
          setOpenFilterByDescription(false)
          setOpenFilterByDate(true)
          setOpenFilterByPriority(false)
+         setOpenFilterByStatus(false)
         }}
        >
         {openFilterByDate ? (
@@ -266,6 +276,7 @@ function App() {
          setOpenFilterByDescription(false)
          setOpenFilterByDate(false)
          setOpenFilterByPriority(true)
+         setOpenFilterByStatus(false)
         }}
        >
         {openFilterByPriority ? (
@@ -281,54 +292,98 @@ function App() {
         ) : null}
         Priority
        </th>
-       <th>Status</th>
+       <th
+        className="relative"
+        onClick={() => {
+         setOpenFilterByTitle(false)
+         setOpenFilterByDescription(false)
+         setOpenFilterByDate(false)
+         setOpenFilterByPriority(false)
+         setOpenFilterByStatus(true)
+        }}
+       >
+        {openFilterByStatus ? (
+         <div className="absolute left-1 top-5 bg-blue-50 border border-blue-100 shadow-sm">
+          <input
+           ref={filterByStatusRef}
+           type="text"
+           placeholder="Search by status"
+           className="p-1"
+          />
+          <button onClick={handleFilterByStatus}>Filter</button>
+         </div>
+        ) : null}
+        Status
+       </th>
       </tr>
      </thead>
      <tbody>
-      {filteredTasks?.map((task, i) => (
-       <tr
-        key={task.title + task.description + task.date}
-        className={`${
-         i % 2 === 0 ? 'bg-gray-200' : 'bg-white'
-        } border border-gray-400`}
-       >
-        <td className="border border-gray-400 px-3 py-1">{task.title}</td>
-        <td className="border border-gray-400 px-3 py-1">{task.description}</td>
-        <td className="border border-gray-400 px-3 py-1">{task.date}</td>
-        <td className="border border-gray-400 px-3 py-1">
-         <p
+      {filteredTasks?.map((task, i) => {
+       if (i >= item && i < item + 5) {
+        return (
+         <tr
+          key={task.title + task.description + task.date}
           className={`${
-           (task.priority === 'high' &&
-            'bg-red-50 text-red-600 border border-red-600') ||
-           (task.priority === 'medium' &&
-            'bg-yellow-50 text-yellow-600 border border-yellow-600') ||
-           (task.priority === 'low' &&
-            'bg-green-50 text-green-600 border border-green-600')
-          } rounded-full px-3`}
+           i % 2 === 0 ? 'bg-gray-200' : 'bg-white'
+          } border border-gray-400`}
          >
-          {task.priority}
-         </p>
-        </td>
-        <td className="border border-gray-400 px-3 py-1">
-         <p
-          className={`${
-           (task.status === 'Not started' &&
-            'bg-blue-50 text-blue-600 border border-blue-600') ||
-           (task.status === 'In progress' &&
-            'bg-yellow-50 text-yellow-600 border border-yellow-600') ||
-           (task.status === 'Testing' &&
-            'bg-gray-50 text-gray-600 border border-gray-600') ||
-           (task.status === 'Done' &&
-            'bg-green-50 text-green-600 border border-green-600')
-          } rounded-full px-3`}
-         >
-          {task.status}
-         </p>
-        </td>
-       </tr>
-      ))}
+          <td className="border border-gray-400 px-3 py-1">{task.title}</td>
+          <td className="border border-gray-400 px-3 py-1">
+           {task.description}
+          </td>
+          <td className="border border-gray-400 px-3 py-1">{task.date}</td>
+          <td className="border border-gray-400 px-3 py-1">
+           <p
+            className={`${
+             (task.priority === 'high' &&
+              'bg-red-50 text-red-600 border border-red-600') ||
+             (task.priority === 'medium' &&
+              'bg-yellow-50 text-yellow-600 border border-yellow-600') ||
+             (task.priority === 'low' &&
+              'bg-green-50 text-green-600 border border-green-600')
+            } rounded-full px-3`}
+           >
+            {task.priority}
+           </p>
+          </td>
+          <td className="border border-gray-400 px-3 py-1">
+           <p
+            className={`${
+             (task.status === 'Not started' &&
+              'bg-blue-50 text-blue-600 border border-blue-600') ||
+             (task.status === 'In progress' &&
+              'bg-yellow-50 text-yellow-600 border border-yellow-600') ||
+             (task.status === 'Testing' &&
+              'bg-gray-50 text-gray-600 border border-gray-600') ||
+             (task.status === 'Done' &&
+              'bg-green-50 text-green-600 border border-green-600')
+            } rounded-full px-3`}
+           >
+            {task.status}
+           </p>
+          </td>
+         </tr>
+        )
+       } else {
+        return null
+       }
+      })}
      </tbody>
     </table>
+    <div className="space-x-3 flex">
+     <p>Page:</p>
+     {[...Array(Math.ceil(filteredTasks?.length / 5)).keys()].map(
+      (value, i) => (
+       <button
+        className={`${value === item / 5 && 'text-red-700 decoration-8'}`}
+        key={`button ${i}`}
+        onClick={() => setItem(value * 5)}
+       >
+        {value + 1}
+       </button>
+      )
+     )}
+    </div>
    </div>
   </div>
  )
